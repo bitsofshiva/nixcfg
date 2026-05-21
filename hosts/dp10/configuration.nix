@@ -18,18 +18,19 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIArlTbzSLIYPvhCAIJDDIHt0fWKgjWRxlHMkV9269OKL user@dp06"
     ];
   };
+  services.xserver.enable=true;
+  services.xserver.videoDrivers=["nvidia"];
+  hardware.nvidia={
+    modesetting.enable=true;
+    open=false;
+    nvidiaSettings=true;
+  };
+  hardware.opengl.enable=true;
 
   hokage = {
     hostName = "dp10";
     zfs.hostId = "e8fd4331";
     gaming.enable = true;
-
-    nvidia = {
-      enable = true;
-      # packageType = "beta";
-      # NVIDIA RTX 3070
-      # https://github.com/NVIDIA/open-gpu-kernel-modules?tab=readme-ov-file#compatible-gpus
-      open = true;
-    };
+    nixbit.repository = "https://github.com/bitsofshiva/nixcfg.git";
   };
 }
