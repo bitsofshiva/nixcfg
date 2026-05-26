@@ -10,7 +10,6 @@
   pkg-config,
   nixosTests,
   installShellFiles,
-  xvfb-run,
   versionCheckHook,
   nix-update-script,
   aspell,
@@ -19,11 +18,11 @@
 stdenv.mkDerivation (finalAttrs: {
   pname = "qownnotes";
   appname = "QOwnNotes";
-  version = "26.5.14";
+  version = "26.5.15";
 
   src = fetchurl {
     url = "https://github.com/pbek/QOwnNotes/releases/download/v${finalAttrs.version}/qownnotes-${finalAttrs.version}.tar.xz";
-    hash = "sha256-NeXk2vgxnOWJHbO7M54KOI4ljmltWBsk0eb/FHU4PTc=";
+    hash = "sha256-Hx/OMImjjMdQLl5bhp3tQ+tDQjbEkptQjHavj7An4c0=";
   };
 
   nativeBuildInputs = [
@@ -33,7 +32,6 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     installShellFiles
   ]
-  ++ lib.optionals stdenv.hostPlatform.isLinux [ xvfb-run ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [ makeWrapper ];
 
   buildInputs = [
@@ -56,15 +54,15 @@ stdenv.mkDerivation (finalAttrs: {
     "-DQLITEHTML_LIBRARY_TYPE=STATIC"
   ];
 
-  # Install shell completion on Linux (with xvfb-run)
+  # Install shell completion on Linux (offscreen, no display needed)
   postInstall =
     lib.optionalString stdenv.hostPlatform.isLinux ''
       installShellCompletion --cmd ${finalAttrs.appname} \
-        --bash <(xvfb-run $out/bin/${finalAttrs.appname} --completion bash) \
-        --fish <(xvfb-run $out/bin/${finalAttrs.appname} --completion fish)
+        --bash <(QT_QPA_PLATFORM=offscreen $out/bin/${finalAttrs.appname} --completion bash) \
+        --fish <(QT_QPA_PLATFORM=offscreen $out/bin/${finalAttrs.appname} --completion fish)
       installShellCompletion --cmd ${finalAttrs.pname} \
-        --bash <(xvfb-run $out/bin/${finalAttrs.appname} --completion bash) \
-        --fish <(xvfb-run $out/bin/${finalAttrs.appname} --completion fish)
+        --bash <(QT_QPA_PLATFORM=offscreen $out/bin/${finalAttrs.appname} --completion bash) \
+        --fish <(QT_QPA_PLATFORM=offscreen $out/bin/${finalAttrs.appname} --completion fish)
     ''
     # Install shell completion on macOS
     + lib.optionalString stdenv.hostPlatform.isDarwin ''
