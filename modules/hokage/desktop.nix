@@ -23,6 +23,7 @@ in
 
     # Allow some insecure packages to be installed
     nixpkgs.config.permittedInsecurePackages = [
+      "electron-39.8.10"
       "qtwebkit-5.212.0-alpha4"
     ];
 
@@ -138,14 +139,11 @@ in
     services.resolved.enable = true;
 
     # https://github.com/Aetf/kmscon
+    fonts.packages = [ pkgs.source-code-pro ];
+
     services.kmscon = {
       enable = lib.mkDefault true;
-      fonts = [
-        {
-          name = "Source Code Pro";
-          package = pkgs.source-code-pro;
-        }
-      ];
+      config."font-name" = "Source Code Pro";
       # https://github.com/Aetf/kmscon/blob/develop/src/kmscon_conf.c
       extraOptions = "--xkb-layout de";
     };
@@ -185,6 +183,11 @@ in
               ];
             };
           };
+        };
+
+        fresh-editor = {
+          enable = true;
+          defaultEditor = lib.mkDefault (useInternalInfrastructure && hokage.role == "desktop");
         };
 
         # Enable https://wezfurlong.org/wezterm/ for terminal with OSC 52 support for zellij clipboard via SSH

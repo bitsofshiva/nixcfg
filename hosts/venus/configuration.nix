@@ -42,7 +42,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    stable.calibre
+    calibre
     zoom-us
     (blender.override { rocmSupport = true; }) # Blender with HIP support for AMD GPUs
     # Temporarily disabled for: sip-4.19.25 not supported for interpreter python3.12
@@ -159,7 +159,7 @@
   console.font = "${pkgs.terminus_font}/share/consolefonts/ter-u20n.psf.gz";
 
   # Increase the console font size for kmscon
-  services.kmscon.extraConfig = "font-size = 26";
+  services.kmscon.config."font-size" = 26;
 
   # AMD GPU monitoring tools
   services.lact.enable = true;
@@ -179,6 +179,12 @@
     capSysNice = false;
   };
   programs.steam.gamescopeSession.enable = true; # Integrates with programs.steam
+
+  #  services.davfs2 = {
+  #    enable = true; # WebDAV support for network shares
+  #    davUser = "omega";
+  #    davGroup = "users";
+  #  };
 
   hokage = {
     hostName = "venus";
